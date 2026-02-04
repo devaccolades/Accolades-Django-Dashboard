@@ -1,9 +1,18 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
+from .models import CaseStudy
+from .serializers import CaseStudySerializer
 
-@api_view(['GET'])
-def health_check(request):
-    return Response({
-        "status": "ok",
-        "app": "dashboard"
-    })
+
+class CaseStudyListAPIView(ListAPIView):
+    serializer_class = CaseStudySerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        queryset = CaseStudy.objects.filter(is_active=True)
+
+        category = self.request.query_params.get("category")
+        if category:
+            queryset = queryset.filter(category=category)
+
+        return queryset.order_by("no")
