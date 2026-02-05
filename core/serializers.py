@@ -5,7 +5,8 @@ from .models import CaseStudy
 class CaseStudySerializer(serializers.ModelSerializer):
     cover = serializers.SerializerMethodField()
     logo = serializers.SerializerMethodField()
-
+    attachment = serializers.SerializerMethodField()
+    
     class Meta:
         model = CaseStudy
         fields = [
@@ -16,6 +17,7 @@ class CaseStudySerializer(serializers.ModelSerializer):
             "description",
             "cover",
             "logo",
+            "attachment",
         ]
 
     def get_cover(self, obj):
@@ -29,3 +31,9 @@ class CaseStudySerializer(serializers.ModelSerializer):
         if obj.logo and request:
             return request.build_absolute_uri(obj.logo.url)
         return None
+    def get_attachment(self, obj):
+        request = self.context.get("request")
+        if obj.attachment and request:
+            return request.build_absolute_uri(obj.attachment.url)
+        return None
+
