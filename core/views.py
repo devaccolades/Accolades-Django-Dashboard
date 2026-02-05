@@ -9,8 +9,7 @@ class CaseStudyListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        queryset = CaseStudy.objects.filter(is_active=True)
-
+        queryset = CaseStudy.objects.all()
         category = self.request.query_params.get("category")
         if category:
             queryset = queryset.filter(category=category)
