@@ -8,5 +8,5 @@ from .models import CaseStudy
 @admin.register(CaseStudy)
 class CaseStudyAdmin(admin.ModelAdmin):
     list_display = ("no", "title", "category",)
-    list_filter = ("category", "is_active")
+    list_filter = ("category",)
     search_fields = ("title", "category")
