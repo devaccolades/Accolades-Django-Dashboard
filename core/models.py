@@ -6,6 +6,8 @@ class CaseStudy(models.Model):
         ("Real Estate", "Real Estate"),
         ("Interiors", "Interiors"),
         ("Film Industry", "Film Industry"),
+        ("Serene homestay", "Serene homestay"),
+        ("Ed-Tech", "Ed-Tech"),
     ]
     no = models.PositiveIntegerField(unique=True)
     title = models.CharField(max_length=255)
