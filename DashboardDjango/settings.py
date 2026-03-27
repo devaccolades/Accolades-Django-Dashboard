@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^c=6k*_(4t%^b-7kykf0lqk0vc+3c$&&hy_o!3_ir+@px)ipcq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -35,7 +35,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+'jazzmin',
     'core',
+     'ckeditor',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,9 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -121,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -150,3 +154,67 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://accoladesintegrated.com",
 ]
+
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Accolades Integrated Admin",
+    "site_header": "Accolades Integrated ",
+    "site_brand": "Accolades Integrated ",
+    # "site_logo": "/images/image.ico",
+    "welcome_sign": "Welcome to Accolades Integrated  Admin",
+    "copyright": "Accolades Integrated ",
+    "search_model": "projects.Projects",
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"model": "projects.Projects"},
+        {"app": "books"},
+    ],
+    # "usermenu_links": [
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+    # ],
+    # "icons": {
+    #     "auth": "fas fa-users-cog",
+    #     "auth.user": "fas fa-user",
+    #     "auth.Group": "fas fa-users",
+    #     "web.Blogs": "fas fa-blog",
+    #     "web.BlogsImages": "fas fa-images",
+    #     "web.Testimonials": "fas fa-quote-right",
+    #     "web.Faq": "fas fa-question-circle",
+    #     "web.Galary": "fas fa-images",
+    #     "web.GalaryImages": "fas fa-image",
+    #     "web.InteriorImages": "fas fa-couch",
+    #     "web.Achievements": "fas fa-trophy",
+    #     "web.Enquiry": "fas fa-envelope",
+    #     "web.CommunityImpact": "fas fa-hand-holding-heart",
+    #     "web.SEO": "fas fa-search",
+    #     "web.Careers": "fas fa-briefcase",
+    #     "web.JobApplication": "fas fa-file-alt",
+    #      "projects": "fas fa-building",
+    #     "projects.amenities": "fas fa-concierge-bell",
+    #     "projects.bank": "fas fa-university",
+    #     "projects.projects": "fas fa-project-diagram",
+    #     "projects.projectimages": "fas fa-images",
+    #     "projects.projectfeatures": "fas fa-star",
+    #     "projects.projectamenitiesimages": "fas fa-image",
+    #     "projects.projectspecification": "fas fa-info-circle",
+    #     "projects.projectplan": "fas fa-map",
+    #     "projects.projectvideos": "fas fa-video",
+    #     "projects.projectnearby": "fas fa-map-marker-alt",
+    #     "projects.currentstatus": "fas fa-calendar-check",
+    # },
+    "related_modal_active": False,
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+    "custom_css": "css/custom_admin.css",
+    "custom_js": None,
+    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
+    "custom_links": {"books": [{"name": "Make Messages", "url": "make_messages", "icon": "fas fa-comments", "permissions": ["books.view_book"]}]},
+    "language_chooser": False,
+    "theme": "default",
+    "dark_mode_theme": "dark",
+    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
+}

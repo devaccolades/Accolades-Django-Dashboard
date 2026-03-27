@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CaseStudy
+from .models import *
 
 
 class CaseStudySerializer(serializers.ModelSerializer):
@@ -37,3 +37,16 @@ class CaseStudySerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.attachment.url)
         return None
 
+class Seoserializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seo
+        fields = "__all__"
+
+class BlogSerializer(serializers.ModelSerializer):
+    date_added = serializers.SerializerMethodField()
+    class Meta:
+        model = Blogs
+        fields = ['id', 'title', 'meta_title', 'meta_description', 'image', 'image_alt', 'descriptions', 'slug', 'date_added']
+
+    def get_date_added(self, obj):
+        return obj.date_added.strftime("%d/%m/%Y")
