@@ -65,17 +65,13 @@ class BlogCategoryListAPIView(APIView):
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-#   blog
 class BlogsViewset(APIView):
-    """
-    API view for fetching Blog list and Blog details
-    """
     model = Blogs
     serializer_class = BlogSerializer
 
     def get(self, request, slug=None):
         try:
-            # 👉 BLOG DETAIL
+            # ================= BLOG DETAIL =================
             if slug:
                 instance = self.get_object(slug)
 
@@ -90,8 +86,10 @@ class BlogsViewset(APIView):
                     context={'request': request}
                 )
 
-                # related blogs (excluding current)
-                related_blogs = self.model.objects.exclude(slug=slug)[:3]
+                # ✅ RELATED BLOGS FIX
+                related_blogs = self.model.objects.filter(
+                    selectCategory=instance.selectCategory
+                ).exclude(slug=slug)[:3]
 
                 related_serializer = self.serializer_class(
                     related_blogs,
@@ -105,7 +103,7 @@ class BlogsViewset(APIView):
                     "related_blogs": related_serializer.data,
                 }, status=status.HTTP_200_OK)
 
-            # 👉 BLOG LIST
+            # ================= BLOG LIST =================
             queryset = self.model.objects.all().order_by("-date_added")
 
             serializer = self.serializer_class(
