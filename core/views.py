@@ -43,80 +43,64 @@ class SeoRetrieveAPIView(APIView):
 
 #   blog
 class BlogsViewset(APIView):
-    
     """
-    API view for fetching Blog and Blog Details for users with pagination.
+    API view for fetching Blog list and Blog details
     """
     model = Blogs
-    serializers_class = BlogSerializer
+    serializer_class = BlogSerializer
 
-    def get(self, request, slug = None):
+    def get(self, request, slug=None):
         try:
+            # 👉 BLOG DETAIL
             if slug:
                 instance = self.get_object(slug)
+
                 if not instance:
                     return Response({
                         "StatusCode": 6002,
-                        "details": "Error",
                         "message": "Blog not found",
                     }, status=status.HTTP_404_NOT_FOUND)
 
-                serializer = BlogSerializer(
-                    instance, 
+                serializer = self.serializer_class(
+                    instance,
                     context={'request': request}
                 )
 
-                related_blogs = self.model.objects.filter(is_deleted=False).exclude(slug=slug)[:3]
-                related_serializer = BlogSerializer(
-                    related_blogs, 
+                # related blogs (excluding current)
+                related_blogs = self.model.objects.exclude(slug=slug)[:3]
+
+                related_serializer = self.serializer_class(
+                    related_blogs,
                     many=True,
                     context={'request': request}
                 )
-                response_data = {
+
+                return Response({
                     "StatusCode": 6000,
-                    "details": "Success",
                     "data": serializer.data,
                     "related_blogs": related_serializer.data,
-                    "message": "Blog details retrieved successfully"
-                }
-                return Response(response_data, status=status.HTTP_200_OK)
+                }, status=status.HTTP_200_OK)
 
-            queryset = self.model.objects.filter(is_deleted=False)
-            paginator = self.pagination_class()
-            page = paginator.paginate_queryset(queryset, request)
+            # 👉 BLOG LIST
+            queryset = self.model.objects.all().order_by("-date_added")
 
-            serializer = self.serializers_class(
-                    page, 
-                    many=True, 
-                    context={'request': request}
-                )
+            serializer = self.serializer_class(
+                queryset,
+                many=True,
+                context={'request': request}
+            )
 
-            response_data = {
-                "StatusCode" : 6000,
-                "details" : "Success",
-                "data" : serializer.data,
-                "pagination": {
-                        "total_items": paginator.page.paginator.count,
-                        "total_pages": paginator.page.paginator.num_pages,
-                        "current_page": paginator.page.number,
-                        "next": paginator.get_next_link(),
-                        "previous": paginator.get_previous_link()
-                    },
-                "message" : "Blog's data fetched successfully"
-            }
-            return Response(response_data,status=status.HTTP_200_OK)
+            return Response({
+                "StatusCode": 6000,
+                "data": serializer.data,
+            }, status=status.HTTP_200_OK)
+
         except Exception as e:
-            logger.error(f"Error retrieving Blog's: {str(e)}")
             return Response({
                 "StatusCode": 6002,
-                "api": request.get_full_path(),
-                "details": "Error",
-                "message": "Failed to retrieve Blog's",
+                "message": "Failed to retrieve blogs",
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def get_object(self, slug):
-        try:
-            return self.model.objects.filter(slug=slug).first()
-        except Exception as e:
-            logger.error(f"Error retrieving object: {str(e)}")
-            return None
+        return self.model.objects.filter(slug=slug).first()
