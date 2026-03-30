@@ -82,7 +82,19 @@ class Seo(models.Model):
     def __str__(self):
         return self.page
     
+class BlogCategory(models.Model):
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'BlogCategory'
+        verbose_name_plural = 'Blog Categories'
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+    
 class Blogs(models.Model):
+    selectCategory = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True, blank=True)
     category = models.CharField(max_length=255,blank=True, null=True)
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to='blogs')
