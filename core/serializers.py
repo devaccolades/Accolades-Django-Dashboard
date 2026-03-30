@@ -43,10 +43,13 @@ class Seoserializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class BlogSerializer(serializers.ModelSerializer):
-    date_added = serializers.SerializerMethodField()
+    formatted_date = serializers.SerializerMethodField()
+
     class Meta:
         model = Blogs
-        fields = ['id', 'title', 'meta_title', 'meta_description', 'image', 'image_alt', 'descriptions', 'slug', 'date_added']
+        fields = "__all__"  # includes original date_added also
 
-    def get_date_added(self, obj):
-        return obj.date_added.strftime("%d/%m/%Y")
+    def get_formatted_date(self, obj):
+        if obj.date_added:
+            return obj.date_added.strftime("%d/%m/%Y")
+        return None
