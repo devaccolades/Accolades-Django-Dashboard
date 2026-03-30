@@ -42,14 +42,17 @@ class Seoserializer(serializers.ModelSerializer):
         model = Seo
         fields = "__all__"
 
+class BlogCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCategory
+        fields = "__all__"
+
 class BlogSerializer(serializers.ModelSerializer):
-    formatted_date = serializers.SerializerMethodField()
+    category_name = serializers.CharField(
+        source="selectCategory.name",
+        read_only=True
+    )
 
     class Meta:
         model = Blogs
-        fields = "__all__"  # includes original date_added also
-
-    def get_formatted_date(self, obj):
-        if obj.date_added:
-            return obj.date_added.strftime("%d/%m/%Y")
-        return None
+        fields = "__all__"

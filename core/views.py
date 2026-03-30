@@ -41,6 +41,30 @@ class SeoRetrieveAPIView(APIView):
         serializer = self.serializer_class(seo, context={"request": request})
         return Response(serializer.data)
 
+class BlogCategoryListAPIView(APIView):
+    def get(self, request):
+        try:
+            categories = BlogCategory.objects.all()
+
+            serializer = BlogCategorySerializer(
+                categories,
+                many=True,
+                context={"request": request}
+            )
+
+            return Response({
+                "StatusCode": 6000,
+                "data": serializer.data
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print("ERROR:", str(e))
+            return Response({
+                "StatusCode": 6002,
+                "message": "Failed to fetch categories",
+                "error": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 #   blog
 class BlogsViewset(APIView):
     """

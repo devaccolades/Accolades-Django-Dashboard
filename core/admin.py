@@ -33,9 +33,16 @@ class SeoAdmin(ModelAdmin):
         ("OG Tags", "tab-og"),
     ]
 
+@admin.register(BlogCategory)
+class BlogCategoryAdmin(ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
 @admin.register(Blogs)
 class BlogsAdmin(ModelAdmin):
     list_display = ('title', 'slug', 'date_added', )
     search_fields = ('title', 'slug', 'description')
     list_display = ['title', 'author_name', 'date_added']
     prepopulated_fields = {'slug': ('title',)}
+
+
