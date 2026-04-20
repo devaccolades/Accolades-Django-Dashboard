@@ -102,7 +102,7 @@ class Blogs(models.Model):
     descriptions = RichTextField(blank=True, null=True)
     meta_title = models.CharField(max_length=300, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(max_length=600, unique=True)
     author_name = models.CharField(max_length=200,null=True, blank=True)
     author_pro_pic = models.FileField(upload_to="blogs/author/", blank=True, null=True)
     blog_date = models.DateField(default=now)
